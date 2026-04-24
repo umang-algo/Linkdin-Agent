@@ -1,76 +1,41 @@
-# 🤖 LinkedIn AI Agent
+# 🤖 LinkedIn AI Agent (Advanced)
 
-An autonomous AI agent designed to draft and publish high-quality LinkedIn posts. This tool leverages **GPT-4o** for content generation and the **LinkedIn API** for zero-touch publishing.
+An autonomous AI agent designed to draft, review, and publish high-quality LinkedIn posts with **image support**.
 
-## 🚀 Quick Start
+## 🚀 Advanced Workflow
 
-### 1. Prerequisites
-- Python 3.9+
-- A LinkedIn Developer App (with `w_member_social` and `openid` permissions)
-- An OpenAI API Key
-
-### 2. Installation
+### 1. Generate a Draft File
+Instead of publishing immediately, the agent now creates a local file for you to review or edit.
 ```bash
-git clone https://github.com/umang-algo/Linkdin-Agent.git
-cd Linkdin-Agent
-pip install -r requirements.txt
+curl -X POST http://localhost:8080/generate \
+     -H "Content-Type: application/json" \
+     -d '{"topic": "Why AI Agents are the new UI"}'
 ```
+- **Output**: A unique `draft_id` and a file saved in the `drafts/` directory.
+- **Action**: Open the file in `drafts/`, tweak the text if needed, and save it.
 
-### 3. Setup Environment
-Create a `.env` file based on `.env.example`:
-```env
-LINKEDIN_CLIENT_ID=your_id
-LINKEDIN_CLIENT_SECRET=your_secret
-OPENAI_API_KEY=your_openai_key
-```
+### 2. Add an Image (Optional)
+If you want to include a visual with your post, place the image in your project folder (e.g., `banner.png`).
 
----
-
-## 🔐 Authentication (The Handshake)
-
-Before you can post, you need a temporary Access Token and your unique LinkedIn URN (Member ID).
-
-1.  Run the auth script:
-    ```bash
-    python auth.py
-    ```
-2.  Your browser will open. Authorize the app.
-3.  The terminal will print your `LINKEDIN_ACCESS_TOKEN` and `LINKEDIN_PERSON_URN`.
-4.  **Copy these into your `.env` file.**
-
----
-
-## 🛠️ Usage
-
-The agent runs as a FastAPI server. This allows you to integrate it into other workflows (like Sovereign or a Slack bot).
-
-### 1. Start the Agent
+### 3. Approve and Publish
+When you are ready to go live, call the `/publish` endpoint with your `draft_id`.
 ```bash
-python main.py
+curl -X POST http://localhost:8080/publish \
+     -H "Content-Type: application/json" \
+     -d '{
+       "draft_id": "draft_20260424_1156",
+       "image_path": "banner.png"
+     }'
 ```
-The API will be available at `http://localhost:8000`. You can access the interactive Swagger UI at `http://localhost:8000/docs`.
 
-### 2. Generate a Draft
-Send a `POST` request to `/generate`:
-```json
-{
-  "topic": "The future of AI agents in 2026"
-}
-```
-The agent will return a professionally crafted post with hooks and hashtags.
+## 🛠️ Features
+- **File-Based Drafts**: Edit your posts in your favorite text editor before they go live.
+- **Image Upload API**: Seamless binary upload to LinkedIn's media servers.
+- **GitHub Attribution**: Automatically appends your repository link to every post.
+- **Human-in-the-Loop**: Total control over the final output.
 
-### 3. Publish to LinkedIn
-Once you are happy with the draft, simply call:
-`GET /publish`
-
-The agent will push the post live to your LinkedIn profile.
-
----
-
-## 🧠 Features
-- **GPT-4o Integration**: High-fidelity, authentic writing style.
-- **State Management**: Stores drafts in-memory for review before publishing.
-- **RESTful API**: Easily connectable to any frontend or automation tool.
-
-## 🛡️ License
-MIT License.
+## 📦 Requirements Update
+The agent now uses `requests` for complex binary uploads and `openai` for drafting. Ensure your `.env` has:
+- `LINKEDIN_ACCESS_TOKEN`
+- `LINKEDIN_PERSON_URN`
+- `OPENAI_API_KEY`
