@@ -1,5 +1,7 @@
 # 🤖 LinkedIn AI Agent (Advanced)
 
+> **"This post was created by my LinkedIn agent. You can also do that!"**
+
 An autonomous AI agent designed to draft, review, and publish high-quality LinkedIn posts with **image support**.
 
 ## 🚀 Advanced Workflow
